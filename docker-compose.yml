@@ -1,0 +1,118 @@
+version: "3.8"
+name: ms-cinema
+
+services:
+  auth_api:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    container_name: auth_api
+    env_file:
+      - ./services/auth/.env
+    environment:
+      - MONGO_HOST=auth_bdd
+    depends_on:
+      - auth_bdd
+
+  auth_bdd:
+    image: mongo:6.0
+    container_name: auth_bdd
+    restart: always
+    env_file:
+      - ./services/auth/.env
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express:1.0.0
+    container_name: mongo-express
+    restart: always
+    env_file:
+      - ./services/auth/.env
+    depends_on:
+      - auth_bdd
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=auth_bdd
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=adminpass
+  postgres:
+    image: postgres:16-alpine
+    container_name: ms-cinema-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+
+  catalog:
+    build: ./services/catalog
+    container_name: ms-cinema-catalog
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: catalog_db
+      DB_USER: catalog_user
+      DB_PASSWORD: catalog_pass
+
+  booking:
+    build: ./services/booking
+    container_name: ms-cinema-booking
+    depends_on:
+      - postgres
+    environment:
+      APP_PORT: "4003"
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: booking_db
+      DB_USER: booking_user
+      DB_PASSWORD: booking_pass
+      SECRET_KEY: "A2g1MepEXXRV7ffoAdfnw3a_pvSTxclfx65UVoNuxlcMw-9UGoo3PZYb4E4V0CWR51U_2B65-ocIHMnBsDNnKQ"
+      FRONTEND_ORIGIN: "http://localhost:8080"
+
+  payment:
+    build: ./services/payment
+    container_name: ms-cinema-payment
+    depends_on:
+      - postgres
+    environment:
+      APP_PORT: "4004"
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: payment_db
+      DB_USER: payment_user
+      DB_PASSWORD: payment_pass
+
+  front:
+    build:
+      context: ./front
+      args:
+        VITE_API_BASE: ${VITE_API_BASE:-http://localhost:3030}
+    container_name: ms-cinema-front
+    ports:
+      - "8080:80"
+    depends_on:
+      - api-gateway
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: ms-cinema-gateway
+    environment:
+      - APP_PORT=3030
+      - AUTH_URL=${AUTH_URL:-http://auth_api:4002}
+      - CATALOG_URL=${CATALOG_URL:-http://catalog:4001}
+      - BOOKING_URL=${BOOKING_URL:-http://booking:4003}
+      - PAYMENT_URL=${PAYMENT_URL:-http://payment:4004}
+    ports:
+      - "3030:3030"
+    depends_on:
+      - auth_api
+      - catalog
+      - booking
+      - payment
+
+volumes:
+  pg_data:
+  mongo_data:
