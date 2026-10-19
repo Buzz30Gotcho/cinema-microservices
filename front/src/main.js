@@ -5,11 +5,15 @@ import router from './router'
 import './tailwind.css'
 import './theme.css'
 import { useAuthStore } from '@/stores/auth.store'
+import { useThemeStore } from '@/stores/theme.store'
 
 const app = createApp(App)
 const pinia = createPinia()
 
 app.use(pinia)
+
+// Applique le thème (clair/sombre) dès le démarrage, sur toutes les pages
+useThemeStore().initializeTheme()
 
 const authStore = useAuthStore()
 
