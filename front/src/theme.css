@@ -1,51 +1,106 @@
-:root {
-    /* Mode sombre (par défaut) */
-    --bg-primary: #101010;
-    --bg-secondary: #1a1a1a;
-    --bg-tertiary: #0f172a;
-    --text-primary: #E0E0E0;
-    --text-secondary: #A0A0A0;
-    --border-color: #333333;
-    --header-bg: rgba(15, 23, 42, 0.8);
-    --card-bg: #1a1a1a;
+/* =========================================================================
+   SYSTÈME DE THÈME — "Nuit cinéma — or"
+   Toute la palette est pilotée par ces variables CSS. tailwind.config.js
+   fait pointer les tokens de couleur (slate, blue, dark-bg, primary-accent…)
+   vers ces variables, donc l'app entière bascule clair/sombre automatiquement.
+   ========================================================================= */
+
+/* --- Mode sombre (par défaut) --- */
+:root,
+html.dark {
+    --bg-deep: #0A0A0D;
+    --bg-primary: #0E0E11;
+    --bg-secondary: #17171C;
+    --bg-tertiary: #1F1F26;
+    --surface-hover: #26262E;
+
+    --border: #2A2A31;
+    --border-strong: #3A3A43;
+
+    --text-primary: #ECE9E4;
+    --text-secondary: #C9C6C0;
+    --text-muted: #9A968E;
+
+    --accent: #E5B873;
+    --accent-hover: #D4A45C;
+    --accent-soft: rgba(229, 184, 115, 0.14);
+    --accent-contrast: #211704;
+
+    --header-bg: rgba(14, 14, 17, 0.72);
+    --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
 }
 
+/* --- Mode clair --- */
 html.light {
-    /* Mode clair */
-    --bg-primary: #F5F5F5;
+    --bg-deep: #ECE7DD;
+    --bg-primary: #F7F5F0;
     --bg-secondary: #FFFFFF;
-    --bg-tertiary: #F9FAFB;
-    --text-primary: #1F2937;
-    --text-secondary: #6B7280;
-    --border-color: #E5E7EB;
-    --header-bg: rgba(255, 255, 255, 0.8);
-    --card-bg: #FFFFFF;
+    --bg-tertiary: #F0ECE4;
+    --surface-hover: #E9E4DA;
+
+    --border: #E4DED2;
+    --border-strong: #D2CAB9;
+
+    --text-primary: #1C1A16;
+    --text-secondary: #4A463E;
+    --text-muted: #837D72;
+
+    --accent: #B8862F;
+    --accent-hover: #9C6F22;
+    --accent-soft: rgba(184, 134, 47, 0.12);
+    --accent-contrast: #FFFFFF;
+
+    --header-bg: rgba(247, 245, 240, 0.78);
+    --shadow: 0 10px 30px -14px rgba(60, 50, 30, 0.25);
 }
 
-/* Appliquer les variables CSS */
+/* --- Application globale + transition douce au changement de thème --- */
+html {
+    background-color: var(--bg-primary);
+}
+
 body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.35s ease, color 0.35s ease;
 }
 
-/* Variantes de Tailwind pour les couleurs CSS */
-.bg-dark-bg {
-    background-color: var(--bg-primary);
+/* Texte lisible sur les fonds accent (boutons/badges dorés) :
+   contraste sombre sur or en mode nuit, blanc sur or en mode jour. */
+.bg-primary-accent,
+.bg-primary-hover,
+.bg-blue-500,
+.bg-blue-600 {
+    color: var(--accent-contrast);
 }
 
-.bg-dark-card {
-    background-color: var(--bg-secondary);
+/* Sélection de texte aux couleurs de l'accent */
+::selection {
+    background: var(--accent);
+    color: var(--accent-contrast);
 }
 
-.text-light-text {
-    color: var(--text-primary);
+/* Barre de défilement harmonisée */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
 }
 
-.text-muted-text {
-    color: var(--text-secondary);
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
 }
 
-.border-dark-border {
-    border-color: var(--border-color);
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 6px;
+    border: 2px solid var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+html {
+    scrollbar-color: var(--border-strong) var(--bg-secondary);
+    scrollbar-width: thin;
 }

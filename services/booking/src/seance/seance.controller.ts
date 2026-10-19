@@ -3,7 +3,7 @@ import { SeanceDto } from '../dto/seance.dto';
 import { SeanceService } from './seance.service';
 import { Seance } from '../entities/seance.entity';
 
-@Controller('sessions')
+@Controller('booking')
 export class SeanceController {
   constructor(private readonly seanceService: SeanceService) {}
 

@@ -336,16 +336,10 @@ function resolvePosterUrl(string $title, ?string $image): string
 {
     $baseUrl = getPublicBaseUrl();
 
-    if ($image) {
-        if (str_starts_with($image, '/')) {
-            return $baseUrl . $image;
-        }
-        if (str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
-            // Ignore external URLs when no domain/key is desired
-            return $baseUrl . '/images/posters/' . slugify($title) . '.jpg';
-        }
-        return $baseUrl . '/' . ltrim($image, '/');
-    }
-
-    return $baseUrl . '/images/posters/' . slugify($title) . '.jpg';
+    // Les affiches sont servies par le service catalog sous /images/posters/...
+    // et exposées via l'API Gateway sous la route publique /catalog
+    // (la gateway réécrit /catalog -> "" vers le service catalog).
+    // On ignore l'ancien champ `image` (chemins obsolètes en base) et on
+    // reconstruit toujours l'URL à partir du titre.
+    return $baseUrl . '/catalog/images/posters/' . slugify($title) . '.jpg';
 }

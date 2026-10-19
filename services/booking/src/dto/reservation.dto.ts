@@ -17,8 +17,6 @@ export class ReservationDto {
   @IsString()
   seatNumber?: string;
 
-  
-
 
 
 }

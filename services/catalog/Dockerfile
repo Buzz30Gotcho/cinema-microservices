@@ -11,4 +11,6 @@ COPY . /var/www/html
 
 EXPOSE 4001
 
-CMD ["php", "-S", "0.0.0.0:4001", "-t", "/var/www/html/public"]
+# index.php sert de routeur (front controller) : il route les requêtes /catalog/*
+# et sert directement les fichiers statiques existants (affiches).
+CMD ["php", "-S", "0.0.0.0:4001", "-t", "/var/www/html/public", "/var/www/html/public/index.php"]

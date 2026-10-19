@@ -19,8 +19,10 @@ import { AuthModule } from './auth/auth.module';
       entities: [Seance, Reservation],
       synchronize: false, // Désactivé pour gérer le schéma via scripts SQL
     }),
-    SeanceModule,
+    // ReservationModule avant SeanceModule : les routes /booking/reservation...
+    // doivent être enregistrées avant la route générique /booking/:id.
     ReservationModule,
+    SeanceModule,
     AuthModule,
   ],
   controllers: [AppController],

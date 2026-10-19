@@ -4,7 +4,7 @@ import { ReservationDto } from '../dto/reservation.dto';
 import { ReservationService } from './reservation.service';
 import { Reservation } from '../entities/reservation.entity';
 
-@Controller('sessions/reservation')
+@Controller('booking/reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) { }
 

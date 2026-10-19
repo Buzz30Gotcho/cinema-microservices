@@ -6,13 +6,14 @@ export class Reservation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  // Les colonnes SQL réelles sont userName / userEmail / seatCode
+  @Column({ name: 'userName' })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'userEmail', nullable: true })
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'seatCode', nullable: true })
   seatNumber: string;
 
   @Column({ nullable: true })

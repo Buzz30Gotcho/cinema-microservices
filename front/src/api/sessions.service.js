@@ -1,27 +1,27 @@
-// src/api/sessions.service.js
+// src/api/booking.service.js
 import http from './http'
 
 // Ce service communique avec le microservice des sessions/réservations
 export const sessionsService = {
     // === SÉANCES PUBLIQUES ===
-    getAllSessions: () => http.get('/sessions'),
+    getAllSessions: () => http.get('/booking'),
 
     // === ADMINISTRATION DES SÉANCES ===
 
     // Récupérer toutes les séances
-    adminGetSessions: () => http.get('/sessions'),
+    adminGetSessions: () => http.get('/booking'),
 
     // Récupérer une séance spécifique par son ID
-    adminGetSessionById: (id) => http.get(`/sessions/${id}`),
+    adminGetSessionById: (id) => http.get(`/booking/${id}`),
 
     // Créer une nouvelle séance
-    createSession: (sessionData) => http.post('/sessions', sessionData),
+    createSession: (sessionData) => http.post('/booking', sessionData),
 
     // Mettre à jour une séance
-    updateSession: (id, sessionData) => http.put(`/sessions/${id}`, sessionData),
+    updateSession: (id, sessionData) => http.put(`/booking/${id}`, sessionData),
 
     // Supprimer une séance
-    deleteSession: (id) => http.delete(`/sessions/${id}`)
+    deleteSession: (id) => http.delete(`/booking/${id}`)
 }
 
 export default sessionsService

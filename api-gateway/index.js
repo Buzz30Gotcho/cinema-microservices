@@ -10,7 +10,7 @@ const PORT = process.env.APP_PORT || 3030;
 app.use(morgan('dev'));
 app.use(cors({
     origin: [
-        'http://localhost:8080',
+        'http://localhost:8083',
         'http://localhost:5173'
     ],
     credentials: true,
@@ -30,11 +30,14 @@ app.options('*', cors({
 }));
 
 // --- Proxy vers microservices
+// Route publique = nom du service. Chaque microservice écoute nativement sur
+// son propre préfixe (/auth, /catalog, /booking, /payment), donc aucune
+// réécriture de chemin n'est nécessaire : la gateway relaie tel quel.
 const services = [
     { route: '/auth', target: process.env.AUTH_URL || 'http://127.0.0.1:4002' },
-    { route: '/movies', target: process.env.CATALOG_URL || 'http://127.0.0.1:4001' },
-    { route: '/sessions', target: process.env.BOOKING_URL || 'http://127.0.0.1:4003' },
-    { route: '/payments', target: process.env.PAYMENT_URL || 'http://127.0.0.1:4004' },
+    { route: '/catalog', target: process.env.CATALOG_URL || 'http://127.0.0.1:4001' },
+    { route: '/booking', target: process.env.BOOKING_URL || 'http://127.0.0.1:4003' },
+    { route: '/payment', target: process.env.PAYMENT_URL || 'http://127.0.0.1:4004' },
 ];
 
 // Log des services configurés au démarrage

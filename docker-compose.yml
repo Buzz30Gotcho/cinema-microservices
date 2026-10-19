@@ -56,6 +56,7 @@ services:
       DB_NAME: catalog_db
       DB_USER: catalog_user
       DB_PASSWORD: catalog_pass
+      PUBLIC_BASE_URL: "http://localhost:3030"
 
   booking:
     build: ./services/booking
@@ -92,7 +93,7 @@ services:
         VITE_API_BASE: ${VITE_API_BASE:-http://localhost:3030}
     container_name: ms-cinema-front
     ports:
-      - "8080:80"
+      - "8083:80"
     depends_on:
       - api-gateway
 

@@ -94,7 +94,7 @@ async function simulatePaymentProcessing(payment) {
 // Routes
 
 // Process payment
-app.post('/payments/process', async (req, res) => {
+app.post('/payment/process', async (req, res) => {
     const { reservationId, amount, paymentMethod, cardLastDigits, cardHolderName } = req.body;
 
     if (!amount || !paymentMethod) {
@@ -150,7 +150,7 @@ app.post('/payments/process', async (req, res) => {
 });
 
 // Get payment by ID
-app.get('/payments/:id', async (req, res) => {
+app.get('/payment/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -171,7 +171,7 @@ app.get('/payments/:id', async (req, res) => {
 });
 
 // Get payments by reservation ID
-app.get('/payments/reservation/:reservationId', async (req, res) => {
+app.get('/payment/reservation/:reservationId', async (req, res) => {
     const { reservationId } = req.params;
 
     try {
@@ -188,7 +188,7 @@ app.get('/payments/reservation/:reservationId', async (req, res) => {
 });
 
 // Refund payment
-app.post('/payments/:id/refund', async (req, res) => {
+app.post('/payment/:id/refund', async (req, res) => {
     const { id } = req.params;
 
     try {

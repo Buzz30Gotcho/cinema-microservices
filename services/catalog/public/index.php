@@ -7,6 +7,15 @@
  * =====================================================
  */
 
+// Routeur du serveur PHP intégré : sert directement les fichiers statiques
+// existants (ex: /catalog/images/posters/xxx.jpg) sans passer par le JSON.
+if (PHP_SAPI === 'cli-server') {
+    $staticFile = __DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    if (is_file($staticFile)) {
+        return false;
+    }
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -24,8 +33,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
 $path = parse_url($uri, PHP_URL_PATH);
 
-// Strip optional gateway prefix
-$path = preg_replace('#^/catalogue#', '', $path) ?: '/';
+// Le service est monté sous /catalog : on retire ce préfixe pour router.
+$path = preg_replace('#^/catalog#', '', $path) ?: '/';
 
 // ============================================================
 //  ROUTES

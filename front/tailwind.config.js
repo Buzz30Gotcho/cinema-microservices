@@ -9,40 +9,68 @@ export default {
     theme: {
         extend: {
             colors: {
-                // Base Dark Palette
-                'dark-bg': '#101010', // Deep charcoal background
-                'dark-card': '#1a1a1a', // Slightly lighter for cards/elements
-                'dark-border': '#333333', // Subtle borders
+                // --- Tokens sémantiques (pilotés par theme.css) ---
+                'dark-bg': 'var(--bg-primary)',
+                'dark-card': 'var(--bg-secondary)',
+                'dark-border': 'var(--border)',
 
-                // Text Colors
-                'light-text': '#E0E0E0', // Primary light text
-                'muted-text': '#A0A0A0', // Secondary/muted text
-                'dark-text': '#505050', // Darker text on light backgrounds (if any)
+                'light-text': 'var(--text-primary)',
+                'muted-text': 'var(--text-muted)',
+                'dark-text': 'var(--text-muted)',
 
-                // Accent & Interactive Colors (Inspired by a deep, rich blue/purple)
-                'primary-accent': '#007bff', // A strong, vibrant blue for main actions
-                'primary-hover': '#0056b3',  // Darker blue for hover states
-                'secondary-accent': '#6c757d', // Muted gray for secondary actions
-                'secondary-hover': '#5a6268', // Darker gray for secondary hover
+                'primary-accent': 'var(--accent)',
+                'primary-hover': 'var(--accent-hover)',
+                'secondary-accent': 'var(--text-muted)',
+                'secondary-hover': 'var(--border-strong)',
 
-                // Semantic Colors
-                'success': '#28a745', // Green for success
-                'info': '#17a2b8',    // Cyan for info
-                'warning': '#ffc107',  // Yellow for warning
-                'danger': '#dc3545',   // Red for errors
-                'danger-hover': '#C82333', // Darker red for hover state
+                // Sémantiques (statut)
+                'success': '#3FB950',
+                'info': 'var(--accent)',
+                'warning': '#E3B341',
+                'danger': '#F85149',
+                'danger-hover': '#DA3633',
 
-                // Legacy cinema colors (if still needed, otherwise remove)
+                // --- Remap des couleurs brutes vers le thème ---
+                // Permet aux centaines de classes existantes (bg-slate-800,
+                // text-white, hover:bg-blue-600, dégradés…) de basculer avec le thème.
+                white: 'var(--text-primary)',
+                black: 'var(--bg-deep)',
+
+                slate: {
+                    50: 'var(--bg-tertiary)',
+                    100: 'var(--text-primary)',
+                    200: 'var(--text-secondary)',
+                    300: 'var(--text-secondary)',
+                    400: 'var(--text-muted)',
+                    500: 'var(--text-muted)',
+                    600: 'var(--border-strong)',
+                    700: 'var(--border)',
+                    800: 'var(--bg-secondary)',
+                    900: 'var(--bg-primary)',
+                    950: 'var(--bg-deep)',
+                },
+
+                blue: {
+                    400: 'var(--accent)',
+                    500: 'var(--accent)',
+                    600: 'var(--accent-hover)',
+                },
+
+                purple: {
+                    300: 'var(--accent)',
+                    600: 'var(--accent-hover)',
+                },
+
                 cinema: {
-                    dark: '#0f172a',
-                    darkAlt: '#1e293b',
+                    dark: 'var(--bg-primary)',
+                    darkAlt: 'var(--bg-secondary)',
                     highlightEdit: '#FFFF00',
                     highlightDelete: '#FF00FF',
                 }
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'], // Body text
-                heading: ['Poppins', 'sans-serif'], // For titles and prominent text
+                sans: ['Inter', 'system-ui', 'sans-serif'],
+                heading: ['Poppins', 'sans-serif'],
             }
         }
     },
