@@ -2,80 +2,80 @@
   <div class="min-h-screen bg-dark-bg text-light-text">
     <Header />
 
-    <main class="max-w-7xl mx-auto px-6 md:px-12 py-10">
+    <main class="max-w-5xl mx-auto px-4 md:px-8 py-8">
       <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-4xl font-heading font-bold mb-2 text-light-text">Planning des séances</h1>
-        <p class="text-muted-text">Retrouvez tous les films par jour et par horaire.</p>
+      <div class="mb-6">
+        <h1 class="text-2xl md:text-3xl font-heading font-bold mb-1 text-light-text">Planning des séances</h1>
+        <p class="text-muted-text text-sm">Retrouvez tous les films par jour et par horaire.</p>
       </div>
 
       <!-- Date selector -->
-      <div class="flex gap-2 mb-8 overflow-x-auto pb-2">
+      <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
         <button
           v-for="date in dates"
           :key="date.value"
           @click="selectedDate = date.value"
           :class="[
-            'px-6 py-3 rounded-lg border-2 font-semibold whitespace-nowrap transition-all',
+            'px-4 py-2 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors',
             selectedDate === date.value
-              ? 'bg-primary-accent border-primary-accent text-light-text'
+              ? 'bg-primary-accent border-primary-accent text-white'
               : 'bg-dark-card border-dark-border text-muted-text hover:border-primary-accent'
           ]"
         >
-          <div class="text-sm">{{ date.day }}</div>
+          {{ date.day }}
         </button>
       </div>
 
       <!-- Loading / Error -->
-      <div v-if="loading" class="text-center text-muted-text py-16">Chargement des séances...</div>
-      <div v-if="error" class="text-center text-danger py-16">{{ error }}</div>
+      <div v-if="loading" class="text-center text-muted-text py-12">Chargement des séances...</div>
+      <div v-if="error" class="text-center text-danger py-12">{{ error }}</div>
 
       <!-- Sessions by movie -->
-      <div v-if="!loading && !error" class="space-y-8">
+      <div v-if="!loading && !error" class="space-y-5">
         <div
           v-for="movie in moviesForSelectedDate"
           :key="movie.id"
-          class="bg-dark-card border border-dark-border rounded-xl overflow-hidden shadow-md transition hover:border-primary-accent"
+          class="bg-dark-card border border-dark-border rounded-xl overflow-hidden"
         >
           <!-- Movie header -->
-          <div class="flex flex-col sm:flex-row gap-6 p-6">
-                      <img 
-                        :src="movie.poster" 
-                        :alt="movie.title"
-                        class="w-full sm:w-32 h-48 sm:h-auto object-cover rounded-lg cursor-pointer"
-                        @click="goToMovieDetail(movie.id)"
-                      />
-            <div class="flex-1">
-              <h2 @click="goToMovieDetail(movie.id)" class="text-2xl font-heading font-bold mb-2 cursor-pointer hover:text-primary-accent transition text-light-text">{{ movie.title }}</h2>
-              <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-text mb-4">
-                <span>{{ movie.genre }}</span>
-                <span>• {{ movie.duration }} min</span>
-                <span class="inline-flex items-center gap-1">• <Star :size="14" /> {{ movie.rating }}</span>
+          <div class="flex gap-4 p-4">
+            <img
+              :src="movie.poster"
+              :alt="movie.title"
+              class="w-16 sm:w-20 aspect-[2/3] object-cover rounded-md cursor-pointer flex-shrink-0"
+              @click="goToMovieDetail(movie.id)"
+            />
+            <div class="flex-1 min-w-0">
+              <h2 @click="goToMovieDetail(movie.id)" class="text-lg font-heading font-bold cursor-pointer hover:text-primary-accent transition-colors text-light-text truncate">{{ movie.title }}</h2>
+              <div class="flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-text mt-1 mb-2">
+                <span v-if="movie.genre">{{ movie.genre }}</span>
+                <span v-if="movie.duration">· {{ movie.duration }} min</span>
+                <span v-if="movie.rating" class="inline-flex items-center gap-1">· <Star :size="13" /> {{ movie.rating }}</span>
               </div>
-              <p class="text-light-text text-sm line-clamp-2">{{ movie.description }}</p>
+              <p v-if="movie.description" class="text-muted-text text-sm line-clamp-2">{{ movie.description }}</p>
             </div>
           </div>
 
           <!-- Sessions grid -->
-          <div class="p-6 border-t border-dark-border bg-dark-bg">
-            <h3 class="text-sm font-semibold text-muted-text uppercase mb-4">Horaires disponibles pour {{ selectedDateFormatted }}</h3>
-            <div v-if="movie.sessions && movie.sessions.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <div class="px-4 pb-4 pt-3 border-t border-dark-border bg-dark-bg">
+            <h3 class="text-xs font-semibold text-muted-text uppercase tracking-wide mb-3">Horaires — {{ selectedDateFormatted }}</h3>
+            <div v-if="movie.sessions && movie.sessions.length > 0" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
               <router-link
                 v-for="session in movie.sessions"
                 :key="session.id"
                 :to="{ path: '/client/booking', query: { sessionId: session.id, movieId: session.movieId ?? movie.id } }"
-                class="p-4 rounded-lg border-2 transition-all bg-dark-card border-dark-border hover:border-primary-accent hover:bg-dark-card/70 cursor-pointer block text-center"
+                class="p-2.5 rounded-lg border border-dark-border bg-dark-card hover:border-primary-accent transition-colors text-center block"
               >
-                <div class="text-xl font-bold mb-1 text-light-text">{{ session.time }}</div>
+                <div class="text-base font-bold text-light-text">{{ session.time }}</div>
                 <div class="text-xs text-muted-text">Salle {{ session.room }}</div>
-                <div v-if="session.price > 12" class="text-xs text-primary-accent mt-1 font-semibold">⭐ Premium</div>
+                <div v-if="session.price > 12" class="text-[11px] text-primary-accent mt-0.5 font-semibold">Premium</div>
               </router-link>
             </div>
-            <div v-else class="text-center text-muted-text py-8">Aucune séance disponible pour cette date</div>
+            <div v-else class="text-center text-muted-text py-6 text-sm">Aucune séance disponible pour cette date</div>
           </div>
         </div>
-         <div v-if="moviesForSelectedDate.length === 0 && !loading" class="text-center text-muted-text py-16">
-            Aucune séance trouvée pour cette date.
+        <div v-if="moviesForSelectedDate.length === 0 && !loading" class="text-center text-muted-text py-12">
+          Aucune séance trouvée pour cette date.
         </div>
       </div>
     </main>

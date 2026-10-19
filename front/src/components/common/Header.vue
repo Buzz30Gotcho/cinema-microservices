@@ -3,17 +3,10 @@
     <div class="flex items-center justify-between px-4 md:px-12 py-4 gap-4">
 
       <!-- Logo -->
-      <router-link to="/" class="flex items-center gap-3 cursor-pointer">
-        <div class="w-10 h-10 md:w-11 md:h-11 rounded-md bg-slate-50 border border-slate-200 shadow-sm flex items-center justify-center flex-shrink-0">
-          <img :src="logoUrl" alt="Central Cinema" class="w-8 h-8 object-contain" />
-        </div>
-        <span class="text-sm sm:text-base md:text-lg font-semibold tracking-wide truncate">
-          CENTRAL CINEMA
-        </span>
-      </router-link>
+      <Logo to="/" />
 
       <!-- Navigation -->
-      <nav class="hidden md:flex items-center gap-8 text-sm text-slate-300">
+      <nav class="hidden md:flex items-center gap-8 text-base font-medium text-slate-300">
         <router-link to="/films" class="hover:text-white transition">Films</router-link>
         <router-link to="/seances" class="hover:text-white transition">Séances</router-link>
         <router-link to="/tarifs" class="hover:text-white transition">Tarifs</router-link>
@@ -23,20 +16,6 @@
 
       <!-- Desktop actions -->
       <div class="hidden md:flex items-center gap-4 text-sm">
-        <!-- Theme Toggle -->
-        <button
-          @click="themeStore.toggleTheme()"
-          class="p-2 rounded-md hover:bg-slate-800 transition"
-          :title="themeStore.isDark ? 'Mode clair' : 'Mode sombre'"
-        >
-          <svg v-if="themeStore.isDark" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-          </svg>
-          <svg v-else class="w-5 h-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.293 1.293a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.828 2.828a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 5a5 5 0 110 10 5 5 0 010-10zm-4.293 1.293a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM3.464 5.464a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM2 10a1 1 0 110 2h1a1 1 0 110-2H2zm2.343 5.464a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM17 11a1 1 0 110 2h1a1 1 0 110-2h-1zm1.464-1.464a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 17a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm4.293 1.207a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-          </svg>
-        </button>
-
         <template v-if="authStore.isAuthenticated">
           <router-link
             to="/profil"
@@ -75,20 +54,6 @@
 
       <!-- Mobile actions -->
       <div class="md:hidden flex items-center gap-2">
-        <button
-          @click="themeStore.toggleTheme()"
-          class="p-2 rounded-md hover:bg-slate-800 transition"
-          :title="themeStore.isDark ? 'Mode clair' : 'Mode sombre'"
-          aria-label="Changer de thème"
-        >
-          <svg v-if="themeStore.isDark" class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-          </svg>
-          <svg v-else class="w-5 h-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.293 1.293a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.828 2.828a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 5a5 5 0 110 10 5 5 0 010-10zm-4.293 1.293a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM3.464 5.464a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM2 10a1 1 0 110 2h1a1 1 0 110-2H2zm2.343 5.464a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM17 11a1 1 0 110 2h1a1 1 0 110-2h-1zm1.464-1.464a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414zM10 17a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm4.293 1.207a1 1 0 011.414 0l.707.707a1 1 0 11-1.414 1.414l-.707-.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-          </svg>
-        </button>
-
         <button
           @click="mobileMenuOpen = !mobileMenuOpen"
           class="p-2 rounded-md border border-slate-700 text-slate-200"
@@ -150,16 +115,14 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store'
-import { useThemeStore } from '@/stores/theme.store'
-import logoUrl from '@/assets/logo.png'
+import Logo from '@/components/common/Logo.vue'
 
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
-const themeStore = useThemeStore()
 const mobileMenuOpen = ref(false)
 
 watch(
@@ -168,10 +131,6 @@ watch(
     mobileMenuOpen.value = false
   }
 )
-
-onMounted(() => {
-  themeStore.initializeTheme()
-})
 
 const initials = computed(() => {
   const firstName = authStore.currentUser?.firstName;

@@ -228,7 +228,7 @@
               <button 
                 @click="processPayment"
                 :disabled="!canPay || processing"
-                class="w-full mt-6 px-6 py-3 bg-primary-accent text-light-text font-bold rounded-lg hover:bg-primary-hover transition-all shadow-lg shadow-primary-accent/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                class="w-full mt-6 px-6 py-3 bg-primary-accent text-white font-semibold rounded-lg hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Loader2 v-if="processing" :size="20" class="animate-spin" />
                 <Lock v-else :size="20" />

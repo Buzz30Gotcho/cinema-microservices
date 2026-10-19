@@ -3,8 +3,8 @@
     <Header />
     
     <main class="flex-1 px-6 md:px-12 py-8">
-      <div class="max-w-7xl mx-auto space-y-6">
-        <h2 class="text-2xl font-bold text-light-text">Mes Réservations</h2>
+      <div class="max-w-3xl mx-auto space-y-5">
+        <h2 class="text-2xl font-bold text-light-text">Mes réservations</h2>
 
       <!-- Loading State -->
       <div v-if="bookingsStore.loading" class="flex justify-center py-12">
@@ -15,69 +15,38 @@
       </div>
 
       <!-- Bookings List -->
-      <div v-else-if="bookingsStore.userBookings.length > 0" class="space-y-6">
-        <div 
-          v-for="booking in bookingsStore.userBookings" 
+      <div v-else-if="bookingsStore.userBookings.length > 0" class="space-y-4">
+        <div
+          v-for="booking in bookingsStore.userBookings"
           :key="booking.id"
-          class="bg-dark-card rounded-xl border border-dark-border p-6 flex flex-col md:flex-row gap-6 items-start"
+          class="bg-dark-card rounded-xl border border-dark-border p-4 flex gap-4 items-start"
         >
-          <!-- Movie Poster -->
-          <div class="w-full md:w-32 aspect-[2/3] rounded-lg overflow-hidden flex-shrink-0 bg-dark-bg border border-dark-border">
-            <img 
-              :src="getMovieImage(booking.seance?.movieId, booking.seance)" 
+          <!-- Affiche -->
+          <div class="w-16 sm:w-20 aspect-[2/3] rounded-md overflow-hidden flex-shrink-0 bg-dark-bg border border-dark-border">
+            <img
+              :src="getMovieImage(booking.seance?.movieId, booking.seance)"
               :alt="getMovieTitle(booking.seance?.movieId, booking.seance)"
               class="w-full h-full object-cover"
               @error="(e) => e.target.src = 'https://via.placeholder.com/100x150?text=Film'"
             >
           </div>
 
-          <!-- Booking Details -->
-          <div class="flex-1">
-            <div class="flex justify-between items-start">
-              <div>
-                <h3 class="text-xl font-bold text-light-text">{{ getMovieTitle(booking.seance?.movieId, booking.seance) }}</h3>
-                <p class="text-muted-text text-sm mt-1">
-                  {{ booking.seance?.room || 'Salle inconnue' }} • {{ formatDateTime(booking.seance?.dateTime) }}
-                </p>
-              </div>
+          <!-- Détails -->
+          <div class="flex-1 min-w-0">
+            <h3 class="font-semibold text-light-text truncate">{{ getMovieTitle(booking.seance?.movieId, booking.seance) }}</h3>
+            <p class="text-muted-text text-sm mt-0.5">
+              {{ booking.seance?.room || 'Salle inconnue' }} · {{ formatDateTime(booking.seance?.dateTime) }}
+            </p>
+            <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm">
+              <span class="text-muted-text">Place <span class="text-light-text font-medium font-mono">{{ booking.seatNumber || 'N/A' }}</span></span>
+              <span class="text-muted-text">Réf. <span class="text-light-text font-mono">#{{ booking.id.substring(0, 8) }}</span></span>
             </div>
-
-            <!-- Booking Info -->
-            <div class="mt-6 grid grid-cols-2 gap-4 max-w-sm">
-              <div class="bg-dark-bg p-3 rounded border border-dark-border">
-                <p class="text-xs text-muted-text uppercase">Place</p>
-                <p class="text-light-text font-mono">{{ booking.seatNumber || 'N/A' }}</p>
-              </div>
-              <div class="bg-dark-bg p-3 rounded border border-dark-border">
-                <p class="text-xs text-muted-text uppercase">Référence</p>
-                <p class="text-light-text font-mono">#{{ booking.id.substring(0, 8) }}</p>
-              </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="mt-4">
-              <button 
-                @click="handleCancelBooking(booking.id)"
-                class="px-4 py-2 bg-danger hover:bg-danger-hover text-light-text text-sm rounded-lg transition-colors"
-              >
-                Annuler la réservation
-              </button>
-            </div>
-          </div>
-
-          <!-- QR Code -->
-          <div class="flex-shrink-0 self-center">
-            <div class="w-24 h-24 bg-light-text p-2 rounded-lg">
-              <div 
-                class="w-full h-full bg-dark-bg opacity-80"
-                :style="{
-                  backgroundImage: 'linear-gradient(135deg, #000 25%, transparent 25%), linear-gradient(225deg, #000 25%, transparent 25%), linear-gradient(45deg, #000 25%, transparent 25%), linear-gradient(315deg, #000 25%, transparent 25%)',
-                  backgroundPosition: '10px 0, 10px 0, 0 0, 0 0',
-                  backgroundSize: '10px 10px',
-                  backgroundRepeat: 'repeat'
-                }"
-              ></div>
-            </div>
+            <button
+              @click="handleCancelBooking(booking.id)"
+              class="mt-3 px-3 py-1.5 text-sm rounded-md border border-danger/40 text-danger hover:bg-danger/10 transition-colors"
+            >
+              Annuler la réservation
+            </button>
           </div>
         </div>
       </div>

@@ -4,9 +4,7 @@
 
       <!-- Logo -->
       <div class="text-center mb-10">
-        <div class="w-20 h-20 mx-auto rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center shadow-lg mb-4">
-          <img :src="logoUrl" alt="Central Cinema" class="w-12 h-12 object-contain" />
-        </div>
+        <Logo :show-text="false" size="lg" class="mb-4" />
         <h1 class="text-3xl font-bold mb-1 text-slate-100">CENTRAL CINEMA</h1>
         <p class="text-slate-400 text-sm">Votre cinéma en ligne</p>
       </div>
@@ -52,7 +50,7 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full py-3 bg-blue-600 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/50 disabled:bg-slate-700 disabled:cursor-not-allowed text-slate-950 font-bold rounded-lg transition transform hover:scale-105"
+            class="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
           >
             <span v-if="!loading">Envoyer le lien</span>
             <span v-else class="inline-flex items-center gap-2">
@@ -84,7 +82,7 @@
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth.store'
 import { AlertTriangle, CheckCircle, Loader2 } from 'lucide-vue-next'
-import logoUrl from '@/assets/logo.png'
+import Logo from '@/components/common/Logo.vue'
 
 const authStore = useAuthStore()
 

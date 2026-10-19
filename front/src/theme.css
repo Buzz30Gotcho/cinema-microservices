@@ -57,6 +57,9 @@ html.light {
 /* --- Application globale + transition douce au changement de thème --- */
 html {
     background-color: var(--bg-primary);
+    /* Curseur de taille global : ajuste texte ET espacements d'un coup.
+       16px = compact, 17px = équilibré, 18px = plus ample. */
+    font-size: 17px;
 }
 
 body {

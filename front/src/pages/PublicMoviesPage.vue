@@ -10,34 +10,32 @@
       <div v-if="error" class="text-center text-danger">Erreur: {{ error }}</div>
 
       <!-- Movies Grid -->
-      <div v-if="!loading && !error" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div v-if="!loading && !error" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
         <router-link
           v-for="movie in movies"
           :key="movie.id"
           :to="`/film/${movie.id}`"
-          class="group relative block h-80 bg-dark-card rounded-lg overflow-hidden
-                     shadow-lg
-                     transform-gpu transition-all duration-300
-                     hover:scale-105 hover:shadow-xl hover:shadow-primary-accent/40 border border-dark-border"
+          class="group block rounded-xl overflow-hidden bg-dark-card border border-dark-border transition-all duration-300 hover:border-primary-accent/60 hover:-translate-y-1 hover:shadow-xl"
         >
-          <img
-            :src="movie.image"
-            alt="Affiche du film"
-            class="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-          />
-          <!-- Fond dégradé avec transparence -->
-          <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/60 to-transparent group-hover:from-dark-bg/90 group-hover:via-dark-bg/70 transition-all"></div>
-
-          <!-- Titre et Infos -->
-          <div class="absolute inset-0 flex flex-col items-center justify-end text-center p-4 pb-6 text-light-text">
-            <h3 class="text-2xl md:text-3xl font-heading font-extrabold drop-shadow-lg transition-transform group-hover:scale-105">
-              {{ movie.title }}
-            </h3>
-            <p class="text-base text-muted-text mt-1">{{ movie.genre }}</p>
-            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-2">
-              <span class="text-success text-sm font-semibold">{{ movie.rating }}★</span>
-              <span class="text-muted-text text-sm ml-2">{{ movie.duration }} min</span>
-            </div>
+          <div class="relative aspect-[2/3] overflow-hidden bg-dark-bg">
+            <img
+              :src="movie.image"
+              :alt="movie.title"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <span
+              v-if="movie.rating"
+              class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur text-xs font-semibold text-primary-accent"
+            >
+              {{ movie.rating }}★
+            </span>
+          </div>
+          <div class="p-3">
+            <h3 class="font-semibold text-light-text truncate">{{ movie.title }}</h3>
+            <p class="text-sm text-muted-text mt-0.5 truncate">
+              <span v-if="movie.genre">{{ movie.genre }}</span>
+              <span v-if="movie.duration"> • {{ movie.duration }} min</span>
+            </p>
           </div>
         </router-link>
       </div>

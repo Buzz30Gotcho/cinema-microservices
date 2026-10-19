@@ -4,40 +4,37 @@
 
     <main class="flex-1">
 
-      <!-- HERO SECTION - Enhanced Cinematic Showcase -->
-      <section class="relative h-[60vh] md:h-[70vh] flex items-center justify-center text-light-text overflow-hidden">
-        <!-- Background Image/Video Placeholder -->
-        <div class="absolute inset-0 w-full h-full">
-          <img src="https://picsum.photos/seed/cinemabackdrop/1920/1080" alt="Cinematic Background" class="w-full h-full object-cover brightness-75">
-          <!-- Subtle Gradient Overlay -->
-          <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/50 to-transparent"></div>
+      <!-- HERO SECTION -->
+      <section class="relative h-[58vh] md:h-[68vh] flex items-center overflow-hidden">
+        <!-- Fond : affiche du film à l'affiche, floutée + dégradé sombre -->
+        <div class="absolute inset-0">
+          <div
+            v-if="featuredMovie.backdropUrl"
+            class="absolute inset-0 bg-cover bg-center scale-110 blur-2xl opacity-40"
+            :style="{ backgroundImage: `url('${featuredMovie.backdropUrl}')` }"
+          ></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/85 to-dark-bg/50"></div>
+          <div class="absolute inset-0 bg-gradient-to-r from-dark-bg via-dark-bg/70 to-transparent"></div>
         </div>
 
-        <!-- Content Overlay -->
-        <div class="relative z-10 max-w-5xl mx-auto text-center p-6 space-y-4">
-          <div class="space-y-2">
-            <p class="text-sm md:text-lg uppercase tracking-[0.2em] text-primary-accent font-semibold opacity-80">
-              Bienvenue au cinéma
-            </p>
-            <h1 class="text-5xl sm:text-7xl md:text-[140px] font-heading font-extrabold leading-none text-primary-accent drop-shadow-2xl animate-pulse" style="text-shadow: 0 0 20px rgba(var(--primary-accent-rgb), 0.5);">
-              CENTRAL
+        <!-- Contenu -->
+        <div class="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12">
+          <div class="max-w-2xl space-y-6">
+            <Logo size="xl" class="mb-2" />
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-heading font-extrabold leading-tight text-light-text">
+              Réservez votre séance en quelques clics
             </h1>
-            <h2 class="text-4xl sm:text-6xl md:text-9xl font-heading font-bold leading-none text-light-text drop-shadow-lg">
-              CINEMA
-            </h2>
-          </div>
-
-          <p class="text-sm sm:text-base md:text-xl text-muted-text max-w-2xl mx-auto mt-6 md:mt-8">
-            Explorez nos derniers films, découvrez les horaires et réservez vos places
-          </p>
-
-          <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-6 pt-4 md:pt-6">
-            <router-link to="/films" class="px-6 sm:px-8 py-3 bg-primary-accent hover:bg-primary-hover rounded-lg font-semibold transition-colors shadow-lg text-center">
-              Voir les films
-            </router-link>
-            <router-link to="/seances" class="px-6 sm:px-8 py-3 bg-dark-card hover:bg-dark-border border border-dark-border rounded-lg font-semibold transition-colors shadow-lg text-center">
-              Toutes les séances
-            </router-link>
+            <p class="text-base md:text-lg text-muted-text max-w-xl">
+              Films à l'affiche, horaires en temps réel et paiement sécurisé. Votre prochaine soirée ciné commence ici.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 pt-2">
+              <router-link to="/seances" class="px-7 py-3 bg-primary-accent hover:bg-primary-hover rounded-lg font-semibold transition-colors text-center">
+                Voir les séances
+              </router-link>
+              <router-link to="/films" class="px-7 py-3 bg-dark-card hover:bg-dark-border border border-dark-border rounded-lg font-semibold transition-colors text-center">
+                Parcourir les films
+              </router-link>
+            </div>
           </div>
         </div>
       </section>
@@ -53,33 +50,26 @@
             </router-link>
           </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
             <div
               v-for="movie in popularMovies"
               :key="movie.id"
               @click="goToMovie(movie.id)"
-              class="group relative h-64 md:h-72 rounded-lg cursor-pointer overflow-hidden
-                     bg-dark-card shadow-lg
-                     transform-gpu transition-all duration-300
-                     hover:scale-105 hover:shadow-xl hover:shadow-primary-accent/40 border border-dark-border"
+              class="group cursor-pointer rounded-xl overflow-hidden bg-dark-card border border-dark-border transition-all duration-300 hover:border-primary-accent/60 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div
-                class="absolute inset-0 w-full h-full"
-                :style="{ backgroundImage: `url('${movie.posterUrl}')`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }"
-              ></div>
-              <!-- Overlay for details on hover -->
-              <div class="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <!-- Infos -->
-                <div class="absolute bottom-0 left-0 right-0 p-4 text-light-text">
-                  <h3 class="text-lg font-semibold truncate group-hover:whitespace-normal group-hover:line-clamp-2">
-                    {{ movie.title }}
-                  </h3>
-                  <div class="mt-1">
-                     <p class="text-sm text-muted-text">
-                      {{ movie.duration }} min • {{ movie.rating }}
-                    </p>
-                  </div>
-                </div>
+              <div class="relative aspect-[2/3] overflow-hidden bg-dark-bg">
+                <img
+                  :src="movie.posterUrl"
+                  :alt="movie.title"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <div class="p-3">
+                <h3 class="font-semibold text-light-text truncate">{{ movie.title }}</h3>
+                <p class="text-sm text-muted-text mt-0.5 truncate">
+                  <span v-if="movie.duration">{{ movie.duration }} min</span>
+                  <span v-if="movie.rating"> • {{ movie.rating }}</span>
+                </p>
               </div>
             </div>
           </div>
@@ -135,17 +125,17 @@ import { useRouter } from 'vue-router'
 import { moviesService } from '@/api/movies.service'
 import Header from '@/components/common/Header.vue'
 import Footer from '@/components/common/Footer.vue'
+import Logo from '@/components/common/Logo.vue'
 
 const router = useRouter()
 const goToMovie = (id) => router.push(`/film/${id}`)
 
 const featuredMovie = ref({
-  id: 1,
-  title: 'Chargement...',
-  overview: "Découvrez les meilleurs films du moment.",
-  backdropUrl: 'https://picsum.photos/seed/cinemabackdrop/1920/1080',
+  id: null,
+  title: '',
+  overview: '',
+  backdropUrl: null,
 });
-console.log("API Base URL:", import.meta.env.VITE_API_BASE);
 const popularMovies = ref([])
 
 onMounted(async () => {

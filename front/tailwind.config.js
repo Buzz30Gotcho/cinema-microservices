@@ -64,6 +64,7 @@ export default {
                 cinema: {
                     dark: 'var(--bg-primary)',
                     darkAlt: 'var(--bg-secondary)',
+                    accent: 'var(--accent)',
                     highlightEdit: '#FFFF00',
                     highlightDelete: '#FF00FF',
                 }
