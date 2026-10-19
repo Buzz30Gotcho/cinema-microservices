@@ -1,210 +1,189 @@
 # 🎬 CENTRAL CINEMA — Application de réservation de billets de cinéma
 
----
+Application web de réservation de billets de cinéma, développée dans le cadre d'un
+**projet noté** sur l'**architecture microservices**.
 
-## 📌 Présentation du projet
+Elle permet de :
 
-**CENTRAL CINEMA** est une application Web de réservation de billets de cinéma développée dans le cadre d’un **projet noté** sur l’architecture **microservices**.
-
-L’objectif est de concevoir une application complète permettant :
-
-* la gestion des films à l’affiche,
-* la gestion des séances de cinéma,
-* la gestion des utilisateurs,
-* la réservation de places avec contrôle des disponibilités.
-
-L’application est accessible depuis un navigateur web et s’exécute en local ou sur un serveur gratuit.
+* consulter les films à l'affiche,
+* parcourir le planning des séances,
+* réserver des places et payer en ligne,
+* gérer les utilisateurs et les rôles (admin / client).
 
 ---
 
 ## 🧩 Architecture générale
 
-L’application repose sur une **architecture microservices**, avec une séparation claire entre le frontend et le backend.
-
-### 📊 Diagramme d’architecture (API Gateway & Microservices)
+L'application repose sur une **architecture microservices** avec un **API Gateway**
+comme unique point d'entrée. Le frontend ne parle qu'à la gateway, qui route ensuite
+vers le microservice concerné. **Chaque microservice possède sa propre base de données.**
 
 ```mermaid
 graph TD
-    A[Frontend Vue.js] --> B[API Gateway]
-    B --> C[Microservice Auth<br/>Flask - Python]
-    B --> D[Microservice Films<br/>PHP]
-    B --> E[Microservice Séances<br/>Node.js]
+    A[Frontend Vue.js 3 - :8083] --> B[API Gateway - :3030]
+    B -->|/auth| C[Service Auth<br/>Flask - Python]
+    B -->|/catalog| D[Service Catalog<br/>PHP natif]
+    B -->|/booking| E[Service Booking<br/>NestJS - TypeScript]
+    B -->|/payment| F[Service Payment<br/>Express - Node.js]
 
-    C --> CDB[(DB Auth)]
-    D --> DDB[(DB Films)]
-    E --> EDB[(DB Séances)]
+    C --> CDB[(MongoDB<br/>authdb)]
+    D --> DDB[(PostgreSQL<br/>catalog_db)]
+    E --> EDB[(PostgreSQL<br/>booking_db)]
+    F --> FDB[(PostgreSQL<br/>payment_db)]
 ```
 
-### 🔍 Lecture du schéma
-
-* Le **frontend Vue.js** communique uniquement avec l’**API Gateway**
-* L’API Gateway redirige les requêtes vers le microservice concerné
-* Chaque microservice possède sa **propre base de données**
-
-👉 Cette architecture garantit une forte séparation des responsabilités et une meilleure évolutivité.
+> ℹ️ Les routes publiques de la gateway portent **le nom du service**
+> (`/auth`, `/catalog`, `/booking`, `/payment`). Chaque microservice écoute
+> nativement sur son préfixe : aucune réécriture de chemin n'est nécessaire.
 
 ---
 
 ## 🧪 Microservices
 
-### 🔐 Microservice Authentification & Utilisateurs
+### 🔐 Auth — Authentification & Utilisateurs
+* **Techno** : Python / **Flask** (application factory + Blueprints)
+* **Base** : **MongoDB** (`authdb`, via `pymongo`)
+* **Port interne** : `4002`
+* **Rôle** : inscription, connexion/déconnexion, profil, rôles (admin/client),
+  génération & validation des **tokens JWT**.
 
-* **Technologie** : Python / Flask
-* **Responsabilités** :
+### 🎞️ Catalog — Catalogue de films
+* **Techno** : **PHP natif** (PDO, sans framework)
+* **Base** : **PostgreSQL** (`catalog_db`)
+* **Port interne** : `4001`
+* **Rôle** : CRUD des films, consultation du catalogue, **service des affiches**
+  (fichiers statiques sous `/catalog/images/posters/…`).
 
-  * Inscription des utilisateurs
-  * Connexion / Déconnexion
-  * Gestion des rôles (admin / client)
-  * Génération et validation des tokens JWT
+### 📅 Booking — Séances & Réservations
+* **Techno** : **NestJS** (TypeScript) + **TypeORM**
+* **Base** : **PostgreSQL** (`booking_db`)
+* **Port interne** : `4003`
+* **Rôle** : gestion des séances (salle, horaires, places) et des **réservations**
+  (routes protégées par JWT).
 
----
+### 💳 Payment — Paiements
+* **Techno** : **Node.js / Express** (driver `pg`)
+* **Base** : **PostgreSQL** (`payment_db`)
+* **Port interne** : `4004`
+* **Rôle** : traitement et suivi des paiements liés aux réservations.
 
-### 🎞️ Microservice Catalogue de Films
-
-* **Technologie** : PHP
-* **Responsabilités** :
-
-  * Ajouter / Modifier / Supprimer des films
-  * Informations : nom, genre, durée, année, réalisateur
-  * Consultation des films à l’affiche
-
----
-
-### 📅 Microservice Séances
-
-* **Technologie** : Node.js
-* **Responsabilités** :
-
-  * Gestion des séances associées à un film
-  * Informations : salle, horaire, nombre de places
-  * Vérification des places restantes
-  * Réservation de places
-
----
-
-## 🗄️ Bases de données
-
-Chaque microservice dispose de **sa propre base de données**, garantissant :
-
-* une indépendance forte,
-* une meilleure scalabilité,
-* une maintenance facilitée.
-
-> Le moteur de base de données peut être identique entre les services, mais les schémas sont séparés.
+### 🚪 API Gateway
+* **Techno** : Node.js / Express + `http-proxy-middleware`
+* **Port** : `3030` (exposé)
+* **Rôle** : point d'entrée unique, CORS, relais vers les microservices.
 
 ---
 
 ## 🖥️ Frontend
 
-### Technologie
-
-* **Framework** : Vue.js 3
-* **Bundler** : Vite
-* **State Management** : Pinia
-* **Routing** : Vue Router
-* **Style** : Tailwind CSS
-
-### Rôles du frontend
-
-* Interface utilisateur (UI / UX)
-* Appels à l’API Gateway via Axios
-* Gestion du token JWT
-* Navigation selon le rôle utilisateur
+* **Framework** : Vue.js 3 · **Bundler** : Vite · **State** : Pinia · **Routing** : Vue Router
+* **Style** : Tailwind CSS — **thème sombre unique** (palette « indigo »), piloté par
+  variables CSS (`src/theme.css` + `tailwind.config.js`).
+* Appels à l'API Gateway via **Axios** (le token JWT est ajouté automatiquement par un
+  interceptor). Servi en production par **Nginx**.
 
 ---
 
-## 🔁 Communication Frontend ↔ Backend
+## 🔁 Routes principales (via l'API Gateway `:3030`)
 
-Toutes les requêtes passent par l’API Gateway.
+| Action                     | Méthode | Endpoint                     | Service  |
+| -------------------------- | ------- | ---------------------------- | -------- |
+| Inscription                | POST    | `/auth/register`             | auth     |
+| Connexion                  | POST    | `/auth/login`                | auth     |
+| Profil courant             | GET     | `/auth/me`                   | auth     |
+| Liste des films            | GET     | `/catalog/movies`            | catalog  |
+| Détail d'un film           | GET     | `/catalog/movies/:id`        | catalog  |
+| Affiches (statique)        | GET     | `/catalog/images/posters/…`  | catalog  |
+| Liste des séances          | GET     | `/booking`                   | booking  |
+| Créer une réservation 🔒   | POST    | `/booking/reservation`       | booking  |
+| Mes réservations 🔒        | GET     | `/booking/reservation/my`    | booking  |
+| Traiter un paiement        | POST    | `/payment/process`           | payment  |
 
-Exemples :
-
-| Action      | Méthode | Endpoint                  |
-| ----------- | ------- | ------------------------- |
-| Connexion   | POST    | `/api/auth/login`         |
-| Films       | GET     | `/api/movies`             |
-| Séances     | GET     | `/api/sessions`           |
-| Réservation | POST    | `/api/sessions/{id}/book` |
-
-Le token JWT est automatiquement ajouté dans les requêtes via un interceptor Axios.
-
----
-
-## 🔐 Authentification
-
-* Authentification basée sur **JWT**
-* Le token est stocké côté client (localStorage)
-* Les routes protégées nécessitent un token valide
-* Redirection automatique vers `/login` en cas de token invalide
+🔒 = nécessite un token JWT valide.
 
 ---
 
-## 🎨 Choix graphiques (UI / UX)
+## 🔐 Authentification (JWT)
 
-L’interface a été conçue avec les objectifs suivants :
-
-* 🎬 Thème cinéma
-* 🎨 Palette de couleurs bleutées
-* 🧘‍♂️ Design simple, chic et confortable
-* 🚀 Navigation fluide et moderne
-
-### Technologies UI
-
-* Tailwind CSS
-* Layout responsive (mobile / desktop)
-* Animations légères
+* Authentification par **JWT** (algorithme **HS256**).
+* Le token est stocké côté client (localStorage) et renvoyé à chaque requête protégée.
+* ⚠️ **Important** : le secret de signature (`SECRET_KEY`) doit être **identique** entre
+  le service `auth` (qui signe le token) et le service `booking` (qui le vérifie), sinon
+  les réservations sont rejetées en `401`. Ce secret est défini dans `docker-compose.yml`.
 
 ---
 
 ## 🚀 Lancement du projet
 
-### Avec Docker Compose
+### Prérequis
+* **Docker** + **Docker Compose**
 
-À la racine du projet, lancez l’ensemble des services :
+### Démarrer (tout en conteneurs)
+
+À la racine du projet :
 
 ```bash
 docker compose up --build
 ```
 
-L’application sera ensuite disponible sur `http://localhost:8080`. L’API Gateway
-est exposée sur `http://localhost:3030`. Arrêtez les services avec `Ctrl+C`,
-puis `docker compose down`.
+Services accessibles une fois démarré :
 
-### Frontend
+| Service       | URL                        |
+| ------------- | -------------------------- |
+| **Frontend**  | http://localhost:8083      |
+| **API Gateway** | http://localhost:3030    |
+
+Arrêter : `Ctrl+C` puis `docker compose down`
+(ajouter `-v` pour réinitialiser aussi les bases de données).
+
+### Développement frontend (hors Docker)
 
 ```bash
+cd front
 npm install
-npm run dev
+npm run dev   # Vite sur http://localhost:5173
 ```
 
-### Backend
+---
 
-Chaque microservice se lance indépendamment selon sa technologie.
+## 🔌 Ports & composants
+
+| Composant       | Image / techno        | Port interne | Exposé sur l'hôte |
+| --------------- | --------------------- | ------------ | ----------------- |
+| Frontend        | Vue 3 + Nginx         | 80           | **8083**          |
+| API Gateway     | Node / Express        | 3030         | **3030**          |
+| Auth            | Flask                 | 4002         | —                 |
+| Catalog         | PHP                   | 4001         | —                 |
+| Booking         | NestJS                | 4003         | —                 |
+| Payment         | Express               | 4004         | —                 |
+| MongoDB         | `mongo:6.0`           | 27017        | —                 |
+| Mongo Express   | `mongo-express:1.0.0` | 8081         | — *(ajouter un mapping de port pour y accéder)* |
+| PostgreSQL      | `postgres:16-alpine`  | 5432         | —                 |
+
+> Les microservices et les bases ne sont **pas** exposés directement : tout passe par la
+> gateway. C'est volontaire (pattern API Gateway : surface d'exposition minimale).
+
+---
+
+## ⚙️ Variables d'environnement notables (`docker-compose.yml`)
+
+| Variable            | Service          | Rôle                                                                 |
+| ------------------- | ---------------- | -------------------------------------------------------------------- |
+| `SECRET_KEY`        | auth **et** booking | Clé de signature/vérification JWT — **doit être identique** des deux côtés |
+| `PUBLIC_BASE_URL`   | catalog          | URL publique (la gateway) utilisée pour construire les URLs d'affiches |
+| `MONGO_DB` / `MONGO_USER` / `MONGO_PASSWORD` / `MONGO_HOST` | auth | Connexion MongoDB |
+| `DB_HOST` / `DB_NAME` / `DB_USER` / `DB_PASSWORD` | catalog, booking, payment | Connexion PostgreSQL |
+| `FRONTEND_ORIGIN`   | booking          | Origine autorisée en CORS (doit correspondre à l'URL du front : `http://localhost:8083`) |
 
 ---
 
 ## 🎓 Objectifs pédagogiques
 
-* Comprendre l’architecture microservices
-* Utiliser plusieurs technologies backend
-* Mettre en place une API Gateway
-* Séparer frontend et backend
-* Gérer l’authentification JWT
-
----
-
-## 👥 Répartition du travail
-
-* Microservice Auth : Python / Flask
-* Microservice Films : PHP
-* Microservice Séances : Node.js
-* Frontend : Vue.js
-
----
-
-## 📎 Conclusion
-
-Ce projet met en œuvre une architecture moderne et modulaire, proche des standards utilisés en entreprise, tout en restant adaptée à un contexte pédagogique.
+* Comprendre et mettre en œuvre une **architecture microservices**.
+* Utiliser **plusieurs technologies backend** (Flask, PHP, NestJS, Express).
+* Mettre en place un **API Gateway** comme point d'entrée unique.
+* Gérer l'**authentification JWT** partagée entre services.
+* Séparer clairement **frontend** et **backend**, chaque service avec sa **propre base**.
 
 ---
 
