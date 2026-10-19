@@ -8,50 +8,50 @@
 /* --- Mode sombre (par défaut) --- */
 :root,
 html.dark {
-    --bg-deep: #0A0A0D;
-    --bg-primary: #0E0E11;
-    --bg-secondary: #17171C;
-    --bg-tertiary: #1F1F26;
-    --surface-hover: #26262E;
+    --bg-deep: #070A10;
+    --bg-primary: #0B0F17;
+    --bg-secondary: #111827;
+    --bg-tertiary: #1A2233;
+    --surface-hover: #202B3D;
 
-    --border: #2A2A31;
-    --border-strong: #3A3A43;
+    --border: #1F2937;
+    --border-strong: #2D3A4F;
 
-    --text-primary: #ECE9E4;
-    --text-secondary: #C9C6C0;
-    --text-muted: #9A968E;
+    --text-primary: #E5E7EB;
+    --text-secondary: #C3C9D4;
+    --text-muted: #9CA3AF;
 
-    --accent: #E5B873;
-    --accent-hover: #D4A45C;
-    --accent-soft: rgba(229, 184, 115, 0.14);
-    --accent-contrast: #211704;
+    --accent: #6366F1;
+    --accent-hover: #4F46E5;
+    --accent-soft: rgba(99, 102, 241, 0.15);
+    --accent-contrast: #FFFFFF;
 
-    --header-bg: rgba(14, 14, 17, 0.72);
-    --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
+    --header-bg: rgba(11, 15, 23, 0.72);
+    --shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
 }
 
 /* --- Mode clair --- */
 html.light {
-    --bg-deep: #ECE7DD;
-    --bg-primary: #F7F5F0;
+    --bg-deep: #E8ECF3;
+    --bg-primary: #F8FAFC;
     --bg-secondary: #FFFFFF;
-    --bg-tertiary: #F0ECE4;
-    --surface-hover: #E9E4DA;
+    --bg-tertiary: #EEF2F7;
+    --surface-hover: #E7ECF3;
 
-    --border: #E4DED2;
-    --border-strong: #D2CAB9;
+    --border: #E2E8F0;
+    --border-strong: #CBD5E1;
 
-    --text-primary: #1C1A16;
-    --text-secondary: #4A463E;
-    --text-muted: #837D72;
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
 
-    --accent: #B8862F;
-    --accent-hover: #9C6F22;
-    --accent-soft: rgba(184, 134, 47, 0.12);
+    --accent: #4F46E5;
+    --accent-hover: #4338CA;
+    --accent-soft: rgba(79, 70, 229, 0.10);
     --accent-contrast: #FFFFFF;
 
-    --header-bg: rgba(247, 245, 240, 0.78);
-    --shadow: 0 10px 30px -14px rgba(60, 50, 30, 0.25);
+    --header-bg: rgba(248, 250, 252, 0.80);
+    --shadow: 0 10px 30px -14px rgba(15, 23, 42, 0.18);
 }
 
 /* --- Application globale + transition douce au changement de thème --- */
